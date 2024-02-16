@@ -1,0 +1,62 @@
+[gd_scene load_steps=4 format=3 uid="uid://dkgwamsgxmyep"]
+
+[ext_resource type="Script" path="res://Knopf.gd" id="1_ymna3"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ctu3s"]
+size = Vector2(40, 40)
+
+[sub_resource type="LabelSettings" id="LabelSettings_idrip"]
+font_size = 26
+
+[node name="Area2D" type="Area2D"]
+process_mode = 3
+script = ExtResource("1_ymna3")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -19.0
+offset_top = -19.0
+offset_right = 19.0
+offset_bottom = 19.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+mouse_filter = 2
+
+[node name="ColorRect" type="ColorRect" parent="ColorRect"]
+z_index = -1
+layout_mode = 0
+offset_left = -3.0
+offset_top = -3.0
+offset_right = 41.0
+offset_bottom = 41.0
+mouse_filter = 2
+color = Color(0, 0, 0, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_ctu3s")
+
+[node name="Label" type="Label" parent="."]
+modulate = Color(0, 0, 0, 1)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -11.5
+offset_right = 20.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+label_settings = SubResource("LabelSettings_idrip")
+horizontal_alignment = 1
+
+[connection signal="input_event" from="." to="." method="_on_input_event"]
+[connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]
