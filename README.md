@@ -1,2 +1,2 @@
 # Sudoku
-Sudoku 2
+Sudoku
