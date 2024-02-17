@@ -4,11 +4,12 @@ extends Node2D
 
 const FeldGröße = 40
 
+var anzahlFelder = 81
 var selectFeld:int = -1
-var currentFeld = 0
+var currentFeld:int = 0
 var FeldGrenze = []
 
-var Ordnung = []
+#var Ordnung = []
 var falscheFelder = []
 var mögFeld = []
 var Felder = []
@@ -85,7 +86,7 @@ func schreibeNum(Wert, Feld):
 	else:
 		Knopf.setzeText("Blöd")
 
-#ersetzt eine Zahl
+#ersetzt eine Zahl falls sich bereits ein Wert in einem Feld befindet
 func ersetzteNum(Wert, Feld):
 	var ogWert = Felder[Feld]
 	var Knopf = Knöpfe[Feld]
@@ -118,9 +119,33 @@ func wertSenken(Feld):
 		schreibeNum(9, Feld)
 	kontrolle()
 
+#erzeugt Zahlen neu
+func reset():
+	#Ordnung.clear()
+	Felder.clear()
+	mögFeld.clear()
+	Spalten.clear()
+	Zeilen.clear()
+	Blöcke.clear()
+	falscheFelder.clear()
+	
+	for i in range(81):
+		Felder.append(0)
+		mögFeld.append([1, 2, 3, 4, 5, 6, 7, 8, 9])
+		#Ordnung.append(i)
+	#Ordnung.shuffle()
+	
+	for o in range(9):
+		Spalten.append([])
+		Zeilen.append([])
+		Blöcke.append([])
+	
+	erzeugeSpielfeld(anzahlFelder)
+
 #erzeugt die Zahlen vom Sudoku
-func erzeugeSpielfeld() -> void:
-	if currentFeld < 81:
+#möglicherweise zufällige Reihenfolge der erzeugten Nummern
+func erzeugeSpielfeld(numFelder) -> void:
+	if currentFeld < numFelder:
 		var mögNum = []
 		
 		for i in range(9):
@@ -133,51 +158,43 @@ func erzeugeSpielfeld() -> void:
 			schreibeNum(num, currentFeld)
 			mögFeld[currentFeld].erase(num)
 			currentFeld += 1
-			erzeugeSpielfeld()
+			erzeugeSpielfeld(anzahlFelder)
 		else:
 			mögFeld[currentFeld] = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 			currentFeld -= 1
 			schreibeNum(0, currentFeld)
-			erzeugeSpielfeld()
+			erzeugeSpielfeld(anzahlFelder)
 	else:
 		currentFeld = 0
 		return
-
-#erzeugt Lücken im Spielfeld
-func erzeugeLücken():
-	pass
 
 #erzeugt das Brett (Vor Zuweisung der Zahlen verwenden!)
 func erzeugeSpielbrett():
 	for i in range(81):
 		var Knopf = load("res://Knopf.tscn").instantiate()
 		Knopf.index = i
-		@warning_ignore("integer_division")
 		Knopf.position = Vector2(checkSpalte(i) * FeldGröße + 2 * (i / 3 % 3) - 2, checkZeile(i) * FeldGröße + 2 * floor(i / 27) - 2)
 		Knöpfe.append(Knopf)
 		add_child(Knopf)
 
-#erzeugt neue Zahlenkombinationen
-func reset():
-	Felder.clear()
-	mögFeld.clear()
-	Spalten.clear()
-	Zeilen.clear()
-	Blöcke.clear()
+#kontrolliert, ob ein Feld nicht möglich ist, ignoriert leere Felder
+func kontrolle():
 	falscheFelder.clear()
-	
 	for i in range(81):
-		Felder.append(0)
-		mögFeld.append([1, 2, 3, 4, 5, 6, 7, 8, 9])
-		Ordnung.append(i)
-	Ordnung.shuffle()
-	for o in range(9):
-		Spalten.append([])
-		Zeilen.append([])
-		Blöcke.append([])
-	
-	erzeugeSpielfeld()
+		var ogWert = Felder[i]
+		schreibeNum(0, i)
+		if !checkFreieNum(i).count(ogWert) and ogWert:
+			falscheFelder.append(i)
+		schreibeNum(ogWert, i)
 
+#schaut, ob sich die Maus im Spielfeld befindet
+func testMaus():
+	var mPos = get_global_mouse_position()
+	if mPos.x < -FeldGröße / 2 or mPos.x > FeldGrenze or mPos.y < -FeldGröße / 2 or mPos.y > FeldGrenze:
+		selectFeld = -1
+
+#färbt Felder, welche sich in der selben Spalte/Zeile/Block wie das ausgewählte Feld befinden
+#färbt falsche Zahlen
 func felderMarkieren(Feld):
 	if Feld + 1:
 		var markFeld = []
@@ -196,20 +213,6 @@ func felderMarkieren(Feld):
 			Knöpfe[i].set_color(Color(1, 1, 1))
 			if falscheFelder.count(i):
 				Knöpfe[i].set_color(Color(1, 0, 0))
-
-func testMaus():
-	var mPos = get_global_mouse_position()
-	if mPos.x < -FeldGröße / 2 or mPos.x > FeldGrenze or mPos.y < -FeldGröße / 2 or mPos.y > FeldGrenze:
-		selectFeld = -1
-
-func kontrolle():
-	falscheFelder.clear()
-	for i in range(81):
-		var ogWert = Felder[i]
-		schreibeNum(0, i)
-		if !checkFreieNum(i).count(ogWert) and ogWert:
-			falscheFelder.append(i)
-		schreibeNum(ogWert, i)
 
 func _ready():
 	erzeugeSpielbrett()
