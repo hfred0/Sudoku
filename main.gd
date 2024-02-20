@@ -1,9 +1,8 @@
 extends Node2D
 
-@export var lückenWahr:float
-
 const FeldGröße = 40
 
+var Schwierigkeit = "einfach"
 var anzahlFelder = 81
 var selectFeld:int = -1
 var currentFeld:int = 0
@@ -17,6 +16,21 @@ var Spalten = []
 var Zeilen = []
 var Blöcke = []
 var Knöpfe = []
+
+
+
+func anzahlFelderRand():
+	var Bereich = [0, 0]
+	
+	match Schwierigkeit:
+		"einfach":
+			Bereich = [40, 59]
+		"mittel":
+			Bereich = [30, 49]
+		"schwierig":
+			Bereich = [20, 39]
+	
+	anzahlFelder = randf_range(Bereich[0], Bereich[1])
 
 #schaut, in welcher Spalte/Zeile/Block sich ein Feld befindet
 func checkSpalte(Feld) -> int:
@@ -130,6 +144,7 @@ func reset():
 	falscheFelder.clear()
 	
 	for i in range(81):
+		Knöpfe[i].setzeText("")
 		Felder.append(0)
 		mögFeld.append([1, 2, 3, 4, 5, 6, 7, 8, 9])
 		#Ordnung.append(i)
@@ -140,6 +155,7 @@ func reset():
 		Zeilen.append([])
 		Blöcke.append([])
 	
+	anzahlFelderRand()
 	erzeugeSpielfeld(anzahlFelder)
 
 #erzeugt die Zahlen vom Sudoku
