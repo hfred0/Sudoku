@@ -1,8 +1,14 @@
 extends Node2D
 
+enum Schwierigkeiten{
+	einfach,
+	mittel,
+	schwer
+}
+
 const FeldGröße = 40
 
-var Schwierigkeit = "einfach"
+@export var Schwierigkeit:Schwierigkeiten
 var anzahlFelder = 81
 var selectFeld:int = -1
 var currentFeld:int = 0
@@ -20,14 +26,14 @@ var Knöpfe = []
 
 
 func anzahlFelderRand():
-	var Bereich = [0, 0]
+	var Bereich
 	
 	match Schwierigkeit:
-		"einfach":
+		1:
 			Bereich = [40, 59]
-		"mittel":
+		2:
 			Bereich = [30, 49]
-		"schwierig":
+		3:
 			Bereich = [20, 39]
 	
 	anzahlFelder = randf_range(Bereich[0], Bereich[1])
