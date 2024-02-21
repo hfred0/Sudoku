@@ -18,6 +18,7 @@ var Ordnung = []
 var falscheFelder = []
 var mögFeld = []
 var Felder = []
+var festeFelder = []
 var Spalten = []
 var Zeilen = []
 var Blöcke = []
@@ -26,9 +27,9 @@ var Knöpfe = []
 func anzahlFelderBereich():
 	match Schwierigkeit:
 		0:
-			Bereich = [4, 7]
+			Bereich = [3, 7]
 		1:
-			Bereich = [3, 6]
+			Bereich = [2, 6]
 		2:
 			Bereich = [2, 5]
 
@@ -119,7 +120,9 @@ func ersetzteNum(Wert, Feld):
 
 #hebt den Wert eines Feldes um 1 an und setzt auf 0 zurück falls Feld bei 9 ist
 func wertAnheben(Feld):
-	if Felder[Feld] < 9:
+	if festeFelder[Feld]:
+		return
+	elif Felder[Feld] < 9:
 		schreibeNum(Felder[Feld] + 1, Feld)
 	else:
 		schreibeNum(0, Feld)
@@ -127,7 +130,9 @@ func wertAnheben(Feld):
 
 #senkt den Wert eines Feldes um 1 und setzt auf 9 zurück falls Feld bei 0 ist
 func wertSenken(Feld):
-	if Felder[Feld] > 0:
+	if festeFelder[Feld]:
+		return
+	elif Felder[Feld] > 0:
 		schreibeNum(Felder[Feld] - 1, Feld)
 	else:
 		schreibeNum(9, Feld)
@@ -143,6 +148,12 @@ func löscheFelder():
 		Zahlen.shuffle()
 		for e in range(9 - round(randf_range(Bereich[0], Bereich[1]))):
 			schreibeNum(0, Zahlen[e])
+	for e in range(81):
+		if Felder[e]:
+			festeFelder.append(e)
+			Knöpfe[e].statisch()
+		else:
+			festeFelder.append(0)
 
 #erzeugt die Zahlen vom Sudoku
 func erzeugeSpielfeld() -> void:
@@ -187,9 +198,11 @@ func reset():
 	Zeilen.clear()
 	Blöcke.clear()
 	falscheFelder.clear()
+	festeFelder.clear()
 	
 	for i in range(81):
 		Knöpfe[i].setzeText("")
+		Knöpfe[i].dynamisch()
 		Felder.append(0)
 		mögFeld.append([1, 2, 3, 4, 5, 6, 7, 8, 9])
 		Ordnung.append(i)

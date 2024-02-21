@@ -14,6 +14,16 @@ func _on_input_event(_viewport, event, _shape_idx):
 				get_parent().wertSenken(index)
 		get_parent().selectFeld = index
 
+#nicht ideal, funktioniert aber immerhin
+func statisch():
+	$Label.visible = false
+	$Label2.visible = true
+	$Label2.text = $Label.text
+
+func dynamisch():
+	$Label.visible = true
+	$Label2.visible = false
+
 func get_color() -> Color:
 	return $ColorRect.color
 
