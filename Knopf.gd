@@ -14,5 +14,8 @@ func _on_input_event(_viewport, event, _shape_idx):
 				get_parent().wertSenken(index)
 		get_parent().selectFeld = index
 
+func get_color() -> Color:
+	return $ColorRect.color
+
 func set_color(color):
 	$ColorRect.color = color

@@ -8,11 +8,11 @@ enum Schwierigkeiten{
 
 const FeldGröße = 40
 
-@export var Schwierigkeit:Schwierigkeiten
-var anzahlFelder = 81
+@export var Schwierigkeit:Schwierigkeiten#
 var selectFeld:int = -1
 var currentFeld:int = 0
 var FeldGrenze = []
+var Bereich = []
 
 var Ordnung = []
 var falscheFelder = []
@@ -23,18 +23,14 @@ var Zeilen = []
 var Blöcke = []
 var Knöpfe = []
 
-func anzahlFelderRand():
-	var Bereich = [0, 0]
-	
+func anzahlFelderBereich():
 	match Schwierigkeit:
 		0:
-			Bereich = [40, 59]
+			Bereich = [4, 7]
 		1:
-			Bereich = [30, 49]
+			Bereich = [3, 6]
 		2:
-			Bereich = [20, 39]
-	
-	anzahlFelder = randf_range(Bereich[0], Bereich[1])
+			Bereich = [2, 5]
 
 #schaut, in welcher Spalte/Zeile/Block sich ein Feld befindet
 func checkSpalte(Feld) -> int:
@@ -137,34 +133,18 @@ func wertSenken(Feld):
 		schreibeNum(9, Feld)
 	kontrolle()
 
-#erzeugt Zahlen neu
-func reset():
-	Ordnung.clear()
-	Felder.clear()
-	mögFeld.clear()
-	Spalten.clear()
-	Zeilen.clear()
-	Blöcke.clear()
-	falscheFelder.clear()
-	
-	for i in range(81):
-		Knöpfe[i].setzeText("")
-		Felder.append(0)
-		mögFeld.append([1, 2, 3, 4, 5, 6, 7, 8, 9])
-		Ordnung.append(i)
-	Ordnung.shuffle()
-	
-	for o in range(9):
-		Spalten.append([])
-		Zeilen.append([])
-		Blöcke.append([])
-	
-	erzeugeSpielfeld()
-	anzahlFelderRand()
-	löscheFelder()
+#macht Felder frei
+func löscheFelder():
+	for i in range(9):
+		var Zahlen = []
+		for o in range(81):
+			if Felder[o] == i + 1:
+				Zahlen.append(o)
+		Zahlen.shuffle()
+		for e in range(9 - round(randf_range(Bereich[0], Bereich[1]))):
+			schreibeNum(0, Zahlen[e])
 
 #erzeugt die Zahlen vom Sudoku
-#möglicherweise zufällige Reihenfolge der erzeugten Nummern
 func erzeugeSpielfeld() -> void:
 	if currentFeld < 81:
 		var mögNum = []
@@ -189,12 +169,6 @@ func erzeugeSpielfeld() -> void:
 		currentFeld = 0
 		return
 
-#macht Felder frei
-#umschreiben, sodass gewisse Anzahl von Zahlen übrigbleibt
-func löscheFelder():
-	for i in range(81 - anzahlFelder):
-		schreibeNum(0, Ordnung[i])
-
 #erzeugt das Brett (Vor Zuweisung der Zahlen verwenden!)
 func erzeugeSpielbrett():
 	for i in range(81):
@@ -203,6 +177,32 @@ func erzeugeSpielbrett():
 		Knopf.position = Vector2(checkSpalte(i) * FeldGröße + 2 * (i / 3 % 3) - 2, checkZeile(i) * FeldGröße + 2 * floor(i / 27) - 2)
 		Knöpfe.append(Knopf)
 		add_child(Knopf)
+
+#erzeugt alle Zahlen neu
+func reset():
+	Ordnung.clear()
+	Felder.clear()
+	mögFeld.clear()
+	Spalten.clear()
+	Zeilen.clear()
+	Blöcke.clear()
+	falscheFelder.clear()
+	
+	for i in range(81):
+		Knöpfe[i].setzeText("")
+		Felder.append(0)
+		mögFeld.append([1, 2, 3, 4, 5, 6, 7, 8, 9])
+		Ordnung.append(i)
+	Ordnung.shuffle()
+	
+	for o in range(9):
+		Spalten.append([])
+		Zeilen.append([])
+		Blöcke.append([])
+	
+	erzeugeSpielfeld()
+	anzahlFelderBereich()
+	löscheFelder()
 
 #kontrolliert, ob ein Feld nicht möglich ist, ignoriert leere Felder
 func kontrolle():
@@ -229,15 +229,17 @@ func felderMarkieren(Feld):
 		markFeld.append_array(retZeile(checkZeile(Feld)))
 		markFeld.append_array(retBlock(checkBlock(Feld)))
 		for i in range(81):
+			var ogFarbe = Knöpfe[i].get_color()
 			if markFeld.count(i):
 				Knöpfe[i].set_color(Color(0.97, 0.97, 1))
 			else:
-				Knöpfe[i].set_color(Color(1, 1, 1))
+				Knöpfe[i].set_color(ogFarbe)
 			if falscheFelder.count(i):
 				Knöpfe[i].set_color(Color(1, 0, 0))
 	else:
 		for i in range(81):
-			Knöpfe[i].set_color(Color(1, 1, 1))
+			var ogFarbe = Knöpfe[i].get_color()
+			Knöpfe[i].set_color(ogFarbe)
 			if falscheFelder.count(i):
 				Knöpfe[i].set_color(Color(1, 0, 0))
 
