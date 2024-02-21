@@ -1,2 +1,2 @@
 # Sudoku
-Sudoku
+Sudoku in Godot
