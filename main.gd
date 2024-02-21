@@ -14,7 +14,7 @@ var selectFeld:int = -1
 var currentFeld:int = 0
 var FeldGrenze = []
 
-#var Ordnung = []
+var Ordnung = []
 var falscheFelder = []
 var mögFeld = []
 var Felder = []
@@ -23,17 +23,15 @@ var Zeilen = []
 var Blöcke = []
 var Knöpfe = []
 
-
-
 func anzahlFelderRand():
-	var Bereich
+	var Bereich = [0, 0]
 	
 	match Schwierigkeit:
-		1:
+		0:
 			Bereich = [40, 59]
-		2:
+		1:
 			Bereich = [30, 49]
-		3:
+		2:
 			Bereich = [20, 39]
 	
 	anzahlFelder = randf_range(Bereich[0], Bereich[1])
@@ -141,7 +139,7 @@ func wertSenken(Feld):
 
 #erzeugt Zahlen neu
 func reset():
-	#Ordnung.clear()
+	Ordnung.clear()
 	Felder.clear()
 	mögFeld.clear()
 	Spalten.clear()
@@ -153,21 +151,22 @@ func reset():
 		Knöpfe[i].setzeText("")
 		Felder.append(0)
 		mögFeld.append([1, 2, 3, 4, 5, 6, 7, 8, 9])
-		#Ordnung.append(i)
-	#Ordnung.shuffle()
+		Ordnung.append(i)
+	Ordnung.shuffle()
 	
 	for o in range(9):
 		Spalten.append([])
 		Zeilen.append([])
 		Blöcke.append([])
 	
+	erzeugeSpielfeld()
 	anzahlFelderRand()
-	erzeugeSpielfeld(anzahlFelder)
+	löscheFelder()
 
 #erzeugt die Zahlen vom Sudoku
 #möglicherweise zufällige Reihenfolge der erzeugten Nummern
-func erzeugeSpielfeld(numFelder) -> void:
-	if currentFeld < numFelder:
+func erzeugeSpielfeld() -> void:
+	if currentFeld < 81:
 		var mögNum = []
 		
 		for i in range(9):
@@ -180,15 +179,21 @@ func erzeugeSpielfeld(numFelder) -> void:
 			schreibeNum(num, currentFeld)
 			mögFeld[currentFeld].erase(num)
 			currentFeld += 1
-			erzeugeSpielfeld(anzahlFelder)
+			erzeugeSpielfeld()
 		else:
 			mögFeld[currentFeld] = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 			currentFeld -= 1
 			schreibeNum(0, currentFeld)
-			erzeugeSpielfeld(anzahlFelder)
+			erzeugeSpielfeld()
 	else:
 		currentFeld = 0
 		return
+
+#macht Felder frei
+#umschreiben, sodass gewisse Anzahl von Zahlen übrigbleibt
+func löscheFelder():
+	for i in range(81 - anzahlFelder):
+		schreibeNum(0, Ordnung[i])
 
 #erzeugt das Brett (Vor Zuweisung der Zahlen verwenden!)
 func erzeugeSpielbrett():
