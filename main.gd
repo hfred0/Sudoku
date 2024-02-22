@@ -1,14 +1,16 @@
 extends Node2D
 
 enum Schwierigkeiten{
+	voll,
 	einfach,
 	mittel,
-	schwer
+	schwer,
+	leet
 }
 
 const FeldGröße = 40
 
-@export var Schwierigkeit:Schwierigkeiten#
+@export var Schwierigkeit:Schwierigkeiten
 var selectFeld:int = -1
 var currentFeld:int = 0
 var FeldGrenze = []
@@ -24,14 +26,19 @@ var Zeilen = []
 var Blöcke = []
 var Knöpfe = []
 
+#irgendein Weg zum Einstellen der Schwierigkeit im Spiel benötigt
 func anzahlFelderBereich():
 	match Schwierigkeit:
 		0:
-			Bereich = [3, 7]
+			Bereich = [9, 9]
 		1:
-			Bereich = [2, 6]
+			Bereich = [3, 7]
 		2:
+			Bereich = [2, 6]
+		3:
 			Bereich = [2, 5]
+		4:
+			Bereich = [0, 0]
 
 #schaut, in welcher Spalte/Zeile/Block sich ein Feld befindet
 func checkSpalte(Feld) -> int:
@@ -257,6 +264,7 @@ func felderMarkieren(Feld):
 				Knöpfe[i].set_color(Color(1, 0, 0))
 
 func _ready():
+	Schwierigkeit = 4
 	erzeugeSpielbrett()
 	reset()
 	FeldGrenze = FeldGröße / 2 * 9 + Knöpfe[40].position.x
@@ -265,9 +273,14 @@ func _ready():
 
 func _process(_delta):
 	testMaus()
-	if Input.is_action_just_pressed("reset"):
-		reset()
 	for i in range(81):
 		Knöpfe[i].set_color(Color(1, 1, 1))
 	if Input.is_action_pressed("check"):
 		felderMarkieren(selectFeld)
+
+
+func _on_item_list_item_selected(index):
+	Schwierigkeit = index
+
+func _on_button_pressed():
+	reset()
