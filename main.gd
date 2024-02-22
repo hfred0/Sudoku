@@ -30,15 +30,15 @@ var Knöpfe = []
 func anzahlFelderBereich():
 	match Schwierigkeit:
 		0:
-			Bereich = [9, 9]
+			Bereich = [9, 9, 9, 9]
 		1:
-			Bereich = [3, 7]
+			Bereich = [3, 5, 6, 7]
 		2:
-			Bereich = [2, 6]
+			Bereich = [3, 4, 5, 6]
 		3:
-			Bereich = [2, 5]
+			Bereich = [3, 3, 4, 5]
 		4:
-			Bereich = [0, 0]
+			Bereich = [0, 0, 0, 0]
 
 #schaut, in welcher Spalte/Zeile/Block sich ein Feld befindet
 func checkSpalte(Feld) -> int:
@@ -153,7 +153,8 @@ func löscheFelder():
 			if Felder[o] == i + 1:
 				Zahlen.append(o)
 		Zahlen.shuffle()
-		for e in range(9 - round(randf_range(Bereich[0], Bereich[1]))):
+		#for e in range(9 - round(randi_range(Bereich[0], Bereich[1]))):
+		for e in range(9 - Bereich[randi_range(0, 3)]):
 			schreibeNum(0, Zahlen[e])
 	for e in range(81):
 		if Felder[e]:
