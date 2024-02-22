@@ -1,11 +1,11 @@
 [gd_scene load_steps=4 format=3 uid="uid://c4373c8oyc40f"]
 
-[ext_resource type="Script" path="res://main.gd" id="1_ft2wi"]
-[ext_resource type="Script" path="res://Schwierigkeiten.gd" id="2_t1325"]
-[ext_resource type="Script" path="res://ResetKnopf.gd" id="3_o8y8q"]
+[ext_resource type="Script" path="res://Sripts/main.gd" id="1_eggku"]
+[ext_resource type="Script" path="res://Sripts/Schwierigkeiten.gd" id="2_1qbee"]
+[ext_resource type="Script" path="res://Sripts/ResetKnopf.gd" id="3_7r6bk"]
 
 [node name="main" type="Node2D"]
-script = ExtResource("1_ft2wi")
+script = ExtResource("1_eggku")
 Schwierigkeit = 1
 
 [node name="Camera2D" type="Camera2D" parent="."]
@@ -27,7 +27,7 @@ item_0/text = "voll"
 item_1/text = "einfach"
 item_2/text = "mittel"
 item_3/text = "schwer"
-script = ExtResource("2_t1325")
+script = ExtResource("2_1qbee")
 
 [node name="Label" type="Label" parent="Camera2D"]
 offset_left = 390.0
@@ -41,7 +41,7 @@ offset_left = 427.0
 offset_top = 64.0
 offset_right = 480.0
 offset_bottom = 88.0
-script = ExtResource("3_o8y8q")
+script = ExtResource("3_7r6bk")
 
 [node name="Label" type="Label" parent="Camera2D/Button"]
 layout_mode = 0

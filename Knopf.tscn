@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://dkgwamsgxmyep"]
 
-[ext_resource type="Script" path="res://Knopf.gd" id="1_ymna3"]
+[ext_resource type="Script" path="res://Sripts/Knopf.gd" id="1_ys5ff"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ctu3s"]
 size = Vector2(40, 40)
@@ -13,7 +13,7 @@ font_size = 32
 
 [node name="Area2D" type="Area2D"]
 process_mode = 3
-script = ExtResource("1_ymna3")
+script = ExtResource("1_ys5ff")
 
 [node name="ColorRect" type="ColorRect" parent="."]
 anchors_preset = 8
