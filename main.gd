@@ -152,7 +152,7 @@ func löscheFelder():
 		for o in range(81):
 			if Felder[o] == i + 1:
 				Zahlen.append(o)
-		Zahlen.shuffle()#
+		Zahlen.shuffle()
 		for e in range(9 - Bereich[randi_range(0, 3)]):
 			schreibeNum(0, Zahlen[e])
 	for e in range(81):
