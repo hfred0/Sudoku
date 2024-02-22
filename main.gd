@@ -4,7 +4,6 @@ const FeldGröße = 40
 
 @export var Schwierigkeit:Schwierigkeiten
 
-var Druck:bool = false
 var selectFeld:int = -1
 var currentFeld:int = 0
 var FeldGrenze = []
