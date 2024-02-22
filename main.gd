@@ -1,13 +1,5 @@
 extends Node2D
 
-enum Schwierigkeiten{
-	voll,
-	einfach,
-	mittel,
-	schwer,
-	leet
-}
-
 const FeldGröße = 40
 
 @export var Schwierigkeit:Schwierigkeiten
@@ -25,6 +17,14 @@ var Spalten = []
 var Zeilen = []
 var Blöcke = []
 var Knöpfe = []
+
+enum Schwierigkeiten{
+	voll,
+	einfach,
+	mittel,
+	schwer,
+	leer
+}
 
 #Schwierigkeiten festlegen
 func anzahlFelderBereich():
