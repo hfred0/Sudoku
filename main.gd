@@ -26,7 +26,7 @@ var Zeilen = []
 var Blöcke = []
 var Knöpfe = []
 
-#irgendein Weg zum Einstellen der Schwierigkeit im Spiel benötigt
+#Schwierigkeiten festlegen
 func anzahlFelderBereich():
 	match Schwierigkeit:
 		0:
@@ -152,8 +152,7 @@ func löscheFelder():
 		for o in range(81):
 			if Felder[o] == i + 1:
 				Zahlen.append(o)
-		Zahlen.shuffle()
-		#for e in range(9 - round(randi_range(Bereich[0], Bereich[1]))):
+		Zahlen.shuffle()#
 		for e in range(9 - Bereich[randi_range(0, 3)]):
 			schreibeNum(0, Zahlen[e])
 	for e in range(81):
