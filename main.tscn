@@ -50,6 +50,13 @@ offset_bottom = 23.0
 text = "Neu"
 horizontal_alignment = 1
 
+[node name="Label2" type="Label" parent="Camera2D"]
+offset_left = 408.0
+offset_top = 92.0
+offset_right = 502.0
+offset_bottom = 115.0
+text = "Kontrolle (c)"
+
 [connection signal="item_selected" from="Camera2D/ItemList" to="." method="_on_item_list_item_selected"]
 [connection signal="mouse_exited" from="Camera2D/ItemList" to="Camera2D/ItemList" method="_on_mouse_exited"]
 [connection signal="mouse_exited" from="Camera2D/Button" to="Camera2D/Button" method="_on_mouse_exited"]

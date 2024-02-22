@@ -3,6 +3,8 @@ extends Node2D
 const FeldGröße = 40
 
 @export var Schwierigkeit:Schwierigkeiten
+
+var Druck:bool = false
 var selectFeld:int = -1
 var currentFeld:int = 0
 var FeldGrenze = []
@@ -275,9 +277,9 @@ func _process(_delta):
 	testMaus()
 	for i in range(81):
 		Knöpfe[i].set_color(Color(1, 1, 1))
+	
 	if Input.is_action_pressed("check"):
 		felderMarkieren(selectFeld)
-
 
 func _on_item_list_item_selected(index):
 	Schwierigkeit = index
