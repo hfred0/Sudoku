@@ -41,6 +41,7 @@ offset_left = 427.0
 offset_top = 64.0
 offset_right = 480.0
 offset_bottom = 88.0
+action_mode = 0
 script = ExtResource("3_ttxoa")
 
 [node name="Label" type="Label" parent="Camera2D/Button"]
