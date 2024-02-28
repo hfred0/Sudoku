@@ -1,3 +1,6 @@
+#statisch() : changes the label to another one with bigger font size and no updating text
+#dynamisch() : changes the label to the original, updating one
+
 extends Area2D
 
 var index: int

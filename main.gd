@@ -1,3 +1,45 @@
+#function and variable table (wished for by Matthias)
+#
+#Variables:
+#
+#FeldGröße : value for the size of a field in pixels
+#Schwierigkeiten : difficulties
+#Schwierigkeit : the current difficulty
+#selectFeld : index of the currently selected field (-1 for none selected)
+#currentFeld : used as an index for creating the numbers of the sudoku
+#FeldGrenze : boundary for right/bottom edge of the field
+#Bereich : an array of 4 values dependend on the difficulty, which are intended to set the amount of numbers which can be deleted
+#falscheFelder : contains all fields which contain faulty/contradictory numbers
+#mögFeld : contains all numbers for a field during number generation, which are still free to use
+#Felder : contains the value of each field (0 for empty)
+#festeFelder : contains all fields which cannot be changed
+#Spalten : contains every value present in a column
+#Zeilen : contains every value present in a row
+#Blöcke : contains every value present in a 3x3 block
+#Knöpfe : contain the instances of the 81 buttons
+#
+#Functions:
+#
+#anzahlFelderBereich() : sets the variable Bereich depending on the difficulty
+#checkSpalte(Feld) : returns the column of a field
+#checkZeile(Feld) : returns the row of a field
+#checkBlock(Feld) : returns the 3x3 block a field is in
+#retSpalte(Spalte) : returns all fields of a column
+#retZeile(Zeile) : returns all fields of a row
+#retBlock(Block) : returns all fields of a 3x3 block
+#checkFreieNum(Feld) : returns all possible numbers for a field
+#schreibeNum(Wert, Feld) : writes a value in a field; a field will be replaced if it already contains a value
+#ersetzteNum(Wert, Feld) : raplaces the value of a field
+#wertAnheben(Feld) : raises the value of a field by 1, writes 0 if the value is 9
+#wertSenken(Feld) : lowers the value of field by 1, writes 9 if the value is 0
+#löscheFelder() : sets the values of certain fields to 0 in order to make the game actually playable and makes the rest static (altough should probably be improved)
+#erzeugeSpielfeld() : creates the numbers for the game
+#erzeugeSpielbrett() : creates the buttons for the game board
+#reset() : resets the game and creates a new set of numbers
+#kontrolle() : checks which fields are incorrect
+#testMaus() : checks if the cursor is outside the game board, and deselcts the selected field if it is
+#felderMarkieren(Feld) : marks the fields in the same column/row/block of the selected field, as well as incorrect fields
+
 extends Node2D
 
 const FeldGröße = 40
@@ -6,10 +48,9 @@ const FeldGröße = 40
 
 var selectFeld:int = -1
 var currentFeld:int = 0
-var FeldGrenze = []
+var FeldGrenze:int
 var Bereich = []
 
-var Ordnung = []
 var falscheFelder = []
 var mögFeld = []
 var Felder = []
@@ -27,21 +68,19 @@ enum Schwierigkeiten{
 	leer
 }
 
-#Schwierigkeiten festlegen
 func anzahlFelderBereich():
 	match Schwierigkeit:
 		0:
 			Bereich = [9, 9, 9, 9]
 		1:
-			Bereich = [3, 5, 6, 7]
+			Bereich = [3, 4, 5, 7]
 		2:
-			Bereich = [3, 4, 5, 6]
+			Bereich = [3, 4, 4, 6]
 		3:
 			Bereich = [3, 3, 4, 5]
 		4:
 			Bereich = [0, 0, 0, 0]
 
-#schaut, in welcher Spalte/Zeile/Block sich ein Feld befindet
 func checkSpalte(Feld) -> int:
 	return Feld % 9
 
@@ -51,7 +90,6 @@ func checkZeile(Feld) -> int:
 func checkBlock(Feld) -> int:
 	return floor(Feld / 3 % 3) + floor(Feld / 27) * 3
 
-#gibt Nummer der Spalte/Zeile/Block zurück
 func retSpalte(Spalte) -> Array:
 	var ret = []
 	for i in range(9):
@@ -70,7 +108,6 @@ func retBlock(Block) -> Array:
 		ret.append(i % 3 + floor(Block / 3) * 27 + Block % 3 * 3 + floor(i / 3) * 9)
 	return ret
 
-#schaut nach allen freien Zahlen für das Feld
 func checkFreieNum(Feld):
 	if Felder[Feld] == 0:
 		var Zahlen = []
@@ -83,13 +120,10 @@ func checkFreieNum(Feld):
 		for i in range(9):
 			if Zahlen.count(i + 1) == 0:
 				retZahlen.append(i + 1)
-		
-		Zahlen.clear()
 		return retZahlen
 	else:
 		return 0
 
-#schreibt Zahl in die dementsprechende Spalte/Zeile/Block
 func schreibeNum(Wert, Feld):
 	if Felder[Feld] != 0:
 		ersetzteNum(Wert, Feld)
@@ -109,7 +143,6 @@ func schreibeNum(Wert, Feld):
 	else:
 		Knopf.setzeText("Blöd")
 
-#ersetzt eine Zahl falls sich bereits ein Wert in einem Feld befindet
 func ersetzteNum(Wert, Feld):
 	var ogWert = Felder[Feld]
 	var Knopf = Knöpfe[Feld]
@@ -126,7 +159,6 @@ func ersetzteNum(Wert, Feld):
 	var text = "%s"
 	Knopf.setzeText(text % Wert)
 
-#hebt den Wert eines Feldes um 1 an und setzt auf 0 zurück falls Feld bei 9 ist
 func wertAnheben(Feld):
 	if festeFelder[Feld]:
 		return
@@ -136,7 +168,6 @@ func wertAnheben(Feld):
 		schreibeNum(0, Feld)
 	kontrolle()
 
-#senkt den Wert eines Feldes um 1 und setzt auf 9 zurück falls Feld bei 0 ist
 func wertSenken(Feld):
 	if festeFelder[Feld]:
 		return
@@ -146,7 +177,7 @@ func wertSenken(Feld):
 		schreibeNum(9, Feld)
 	kontrolle()
 
-#macht Felder frei
+#überarbeiten
 func löscheFelder():
 	for i in range(9):
 		var Zahlen = []
@@ -163,7 +194,6 @@ func löscheFelder():
 		else:
 			festeFelder.append(0)
 
-#erzeugt die Zahlen vom Sudoku
 func erzeugeSpielfeld() -> void:
 	if currentFeld < 81:
 		var mögNum = []
@@ -188,7 +218,6 @@ func erzeugeSpielfeld() -> void:
 		currentFeld = 0
 		return
 
-#erzeugt das Brett (Vor Zuweisung der Zahlen verwenden!)
 func erzeugeSpielbrett():
 	for i in range(81):
 		var Knopf = load("res://Knopf.tscn").instantiate()
@@ -197,9 +226,7 @@ func erzeugeSpielbrett():
 		Knöpfe.append(Knopf)
 		add_child(Knopf)
 
-#erzeugt alle Zahlen neu
 func reset():
-	Ordnung.clear()
 	Felder.clear()
 	mögFeld.clear()
 	Spalten.clear()
@@ -213,8 +240,6 @@ func reset():
 		Knöpfe[i].dynamisch()
 		Felder.append(0)
 		mögFeld.append([1, 2, 3, 4, 5, 6, 7, 8, 9])
-		Ordnung.append(i)
-	Ordnung.shuffle()
 	
 	for o in range(9):
 		Spalten.append([])
@@ -225,7 +250,6 @@ func reset():
 	anzahlFelderBereich()
 	löscheFelder()
 
-#kontrolliert, ob ein Feld nicht möglich ist, ignoriert leere Felder
 func kontrolle():
 	falscheFelder.clear()
 	for i in range(81):
@@ -235,14 +259,11 @@ func kontrolle():
 			falscheFelder.append(i)
 		schreibeNum(ogWert, i)
 
-#schaut, ob sich die Maus im Spielfeld befindet
 func testMaus():
 	var mPos = get_global_mouse_position()
 	if mPos.x < -FeldGröße / 2 or mPos.x > FeldGrenze or mPos.y < -FeldGröße / 2 or mPos.y > FeldGrenze:
 		selectFeld = -1
 
-#färbt Felder, welche sich in der selben Spalte/Zeile/Block wie das ausgewählte Feld befinden
-#färbt falsche Zahlen
 func felderMarkieren(Feld):
 	if Feld + 1:
 		var markFeld = []
