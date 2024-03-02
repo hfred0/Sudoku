@@ -17,6 +17,17 @@ func _on_input_event(_viewport, event, _shape_idx):
 				get_parent().wertSenken(index)
 		get_parent().selectFeld = index
 
+func zeigMögNum(Num):
+	if Num is Array:
+		for i in range(Num.size()):
+			$Control.get_child(Num[i] - 1).visible = true
+	else:
+		$Control.get_child(Num - 1).visible = true
+
+func verMögNum():
+	for i in range(9):
+		$Control.get_child(i).visible = false
+
 #nicht ideal, funktioniert aber immerhin
 func statisch():
 	$Label.visible = false

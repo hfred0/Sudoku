@@ -297,9 +297,12 @@ func _process(_delta):
 	testMaus()
 	for i in range(81):
 		Knöpfe[i].set_color(Color(1, 1, 1))
+		Knöpfe[i].verMögNum()
 	
 	if Input.is_action_pressed("check"):
 		felderMarkieren(selectFeld)
+		if selectFeld + 1 and !Felder[selectFeld]:
+			Knöpfe[selectFeld].zeigMögNum(checkFreieNum(selectFeld))
 
 func _on_item_list_item_selected(index):
 	Schwierigkeit = index
